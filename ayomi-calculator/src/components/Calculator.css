@@ -4,11 +4,6 @@
   flex-direction: row;
   justify-content: space-between;
   padding: 5%;
-  height: 100vh;
-}
-
-.calculator-body {
-  width: 50%;
 }
 
 .display {
@@ -16,9 +11,11 @@
   align-items: center;
   justify-content: flex-end;
   font-size: 1.5em;
-  width: 100%;
+  width: 93%;
   height: 10vh;
   background-color: #848693;
+  border: solid 0.5rem rebeccapurple;
+  border-radius: 3%;
   color: #fff;
   padding-right: 10px;
 }
@@ -31,7 +28,7 @@
 
 .button {
   width: 25%;
-  height: 10vh;
+  height: 5vh;
   border: 1px solid #cdcdcd;
   text-align: center;
   background-color: #e0e0e0;

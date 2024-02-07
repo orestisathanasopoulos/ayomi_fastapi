@@ -13,7 +13,7 @@ class Operation(BaseModel):
         pattern = r'(\d+(?:\.\d+)?)+(?:\+|-|\*|\*\*|\/)+'
         if not re.fullmatch(pattern,operation_no_spaces):
             raise ValueError("Format Error - the operation must consist of numbers followed by operators")
-        return v    
+        return v.strip()    
     
 class OperationWithResultBase(Operation):
     result :int|float

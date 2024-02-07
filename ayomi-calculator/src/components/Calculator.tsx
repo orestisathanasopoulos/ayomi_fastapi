@@ -1,41 +1,79 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "./Button";
 import "./Calculator.css";
+import axios from "axios";
 
 const Calculator = () => {
-  const [operandInput, setOperandInput] = useState("");
-  const [operatorInput, setOperatorInput] = useState("");
+  const [operandInput, setOperandInput] = useState<string | null>("");
+  const [operatorInput, setOperatorInput] = useState<string | null>("");
 
   const handleOperandClick = (buttonValue: string) => {
-    setOperandInput(`${operandInput} ${buttonValue}`);
+    setOperandInput(`${operandInput}${buttonValue}`);
   };
 
   const handleOperatorClick = (buttonValue: string) => {
     setOperatorInput(`${operatorInput} ${buttonValue}`);
+    setOperandInput(`${operandInput} `);
   };
 
-  const displayValue = "0";
+  const handClearClick = () => {
+    setOperatorInput("");
+    setOperandInput("");
+  };
+
+  const calculateTotal = async () => {
+    try {
+      const operation = JSON.stringify({
+        operation: `${operandInput}${operatorInput}`,
+      });
+      console.log(operation);
+
+      const response = await axios.post(
+        "http://localhost:8000/calculate",
+        operation,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setOperatorInput("");
+      setOperandInput(response.data.result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/data");
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const displayValue = `${operandInput} | ${operatorInput}`;
 
   return (
     <div id="calculator" className="section-bg-image">
-      <h2>Lets do some math!</h2>
       <div className="calculator-body">
         <div className="display">{displayValue}</div>
         <div className="buttons">
           <Button
             buttonValue="AC"
             className="button"
-            onClick={() => handleButtonClick("AC")}
+            onClick={() => handClearClick()}
           />
           <Button
-            buttonValue="-"
+            buttonValue="D"
             className="button"
-            onClick={() => handleOperatorClick("-")}
+            onClick={() => fetchData()}
           />
           <Button
-            buttonValue="-"
+            buttonValue="**"
             className="button"
-            onClick={() => handleOperatorClick("-")}
+            onClick={() => handleOperatorClick("**")}
           />
           <Button
             buttonValue="÷"
@@ -107,7 +145,7 @@ const Calculator = () => {
           <Button
             buttonValue="+"
             className="button right-button"
-            onClick={() => handleOperandClick("+")}
+            onClick={() => handleOperatorClick("+")}
           />
         </div>
         <div className="buttons">
@@ -124,7 +162,7 @@ const Calculator = () => {
           <Button
             buttonValue="="
             className="button right-button"
-            onClick={() => handleButtonClick("=")}
+            onClick={() => calculateTotal()}
           />
         </div>
       </div>

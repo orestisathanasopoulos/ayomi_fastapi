@@ -38,7 +38,7 @@ def postfixEval(expression):
         operand1 = operandStack.pop()
         result = calculate(token,operand1,operand2)
         operandStack.push(result)
-      else: 
+      elif (token.isdigit()): 
         operandStack.push(float(token))
         
     return operandStack.pop()

@@ -1,7 +1,9 @@
 from datetime import date
 from typing import Generator, List
-from fastapi import FastAPI,HTTPException,Depends
+from fastapi import FastAPI,HTTPException,Depends, Response
 from fastapi.encoders import jsonable_encoder
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from sqlalchemy import select,insert
 import uvicorn
@@ -17,6 +19,7 @@ from backend.app.calculator import postfixEval
 app =  FastAPI()
 
 
+
 def get_db() -> Generator:
     db = SessionLocal()  
     try:
@@ -25,12 +28,14 @@ def get_db() -> Generator:
         db.close() 
 
 
+
 @app.get('/test')
 async def test():
     return {"Hi":"I'm here"}
 
 @app.post('/calculate',status_code=201, response_model=OperationWithResultInDb)
 def calculate(request:Operation,db: Session = Depends(get_db)):
+    print(request.operation)
     calculation = postfixEval(request.operation)
     print("RESULT",calculation)
     complete_operation:CreateOperationWithResult = {"operation":request.operation,"result":calculation}
@@ -56,8 +61,14 @@ def fetchOperation(
     json_results = jsonable_encoder(results.scalars().all())    
     df = pd.DataFrame(json_results)
     df.to_csv(f'./outputs/out{date.today()}.csv',index=False)  
-        
-    return results.scalars().all()
+    filename = f'out{date.today()}.csv'
+    headers = {'Content-Disposition': 'attachment; filename=fout{date.today()}.csv"'}
+    return FileResponse(f'./outputs/out{date.today()}.csv', headers=headers, media_type="text/csv",filename=filename)
+    
+    # return results.scalars().all()
+
+
+app.mount("/", StaticFiles(directory="/Users/Orestis/repos/ayomi_fastapi/ayomi-calculator/dist",html = True), name="static")
 
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="0.0.0.0", port=8080, reload=True)
