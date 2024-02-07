@@ -7,11 +7,11 @@ from sqlalchemy import select,insert
 import uvicorn
 import pandas as pd
 import os  
-from app.database.session import SessionLocal
-from app.schemas.operations import Operation,OperationWithResultInDb,CreateOperationWithResult
-from app.database.models import OperationWithResult
+from backend.app.database.session import SessionLocal
+from backend.app.schemas.operations import Operation,OperationWithResultInDb,CreateOperationWithResult
+from backend.app.database.models import OperationWithResult
 
-from app.calculator import postfixEval
+from backend.app.calculator import postfixEval
 
 
 app =  FastAPI()
