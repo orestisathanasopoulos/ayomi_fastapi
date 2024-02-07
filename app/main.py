@@ -1,13 +1,11 @@
 from datetime import date
-import datetime
 from typing import Generator, List
-from fastapi import FastAPI,HTTPException,Request,Depends
+from fastapi import FastAPI,HTTPException,Depends
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from sqlalchemy import select,insert
 import uvicorn
 import pandas as pd
-import json
 import os  
 from app.database.session import SessionLocal
 from app.schemas.operations import Operation,OperationWithResultInDb,CreateOperationWithResult

@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlalchemy import Column, Identity,MetaData,TIMESTAMP
+from sqlalchemy import Identity,MetaData,TIMESTAMP
 from sqlalchemy.sql import func
 from sqlalchemy.orm import DeclarativeBase,Mapped,mapped_column
 import datetime
