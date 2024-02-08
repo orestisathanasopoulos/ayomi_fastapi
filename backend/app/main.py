@@ -47,7 +47,7 @@ def calculate(request:Operation,db: Session = Depends(get_db)):
     return new_row
 
 
-@app.get('/data',status_code=200,response_model=List[OperationWithResultInDb])
+@app.get('/data',status_code=200,response_class=FileResponse)
 def fetchOperation(
     db: Session = Depends(get_db)):
     results = db.execute(select(OperationWithResult).order_by(OperationWithResult.id))
@@ -58,12 +58,15 @@ def fetchOperation(
         )
    
     os.makedirs('./outputs', exist_ok=True)  
-    json_results = jsonable_encoder(results.scalars().all())    
+    json_results = jsonable_encoder(results.scalars().all())     
     df = pd.DataFrame(json_results)
     df.to_csv(f'./outputs/out{date.today()}.csv',index=False)  
     filename = f'out{date.today()}.csv'
-    headers = {'Content-Disposition': 'attachment; filename=fout{date.today()}.csv"'}
-    return FileResponse(f'./outputs/out{date.today()}.csv', headers=headers, media_type="text/csv",filename=filename)
+    path = f'./outputs/out{date.today()}.csv'
+    if not path:
+        raise HTTPException(status_code=404,detail="File not found")
+    headers = {'Content-Disposition': 'attachment; '}
+    return path
     
     # return results.scalars().all()
 

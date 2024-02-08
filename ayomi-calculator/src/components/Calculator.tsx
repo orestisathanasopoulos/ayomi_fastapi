@@ -47,9 +47,15 @@ const Calculator = () => {
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:8000/data");
-      console.log(response);
+      const blob = new Blob([response.data], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.setAttribute("download", `out${Date.now()}.csv`);
+      a.click();
+      window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.log(error);
+      console.error("Error exporting CSV", error);
     }
   };
 
