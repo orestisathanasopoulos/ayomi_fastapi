@@ -26,8 +26,6 @@ const Calculator = () => {
       const operation = JSON.stringify({
         operation: `${operandInput}${operatorInput}`,
       });
-      console.log(operation);
-
       const response = await axios.post(
         "http://localhost:8000/calculate",
         operation,
@@ -40,7 +38,7 @@ const Calculator = () => {
       setOperatorInput("");
       setOperandInput(response.data.result);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -51,7 +49,7 @@ const Calculator = () => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.setAttribute("download", `out${Date.now()}.csv`);
+      a.setAttribute("download", `out_${Date.now()}.csv`);
       a.click();
       window.URL.revokeObjectURL(url);
     } catch (error) {

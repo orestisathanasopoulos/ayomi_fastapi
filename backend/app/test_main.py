@@ -48,7 +48,6 @@ def test_read_main():
 
 def test_no_operations_in_db():
     response = client.get('/data')
-    print(response)
     try:
         df = pd.read_csv(f'./outputs/out{date.today()}.csv')
     except:

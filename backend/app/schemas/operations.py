@@ -29,7 +29,3 @@ class OperationWithResultInDb(OperationWithResultBase):
     model_config = ConfigDict(
         from_attributes= True
     )
-
-
-
-re.fullmatch

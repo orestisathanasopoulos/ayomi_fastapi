@@ -5,6 +5,7 @@ services:
     build: ./ayomi-calculator  
     ports:
       - 5173:5173
+      - 4173:4173
     develop:
      watch:
       - path: ./ayomi-calculator/package.json

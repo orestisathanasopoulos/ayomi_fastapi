@@ -1,4 +1,4 @@
-FROM node:20-alpine
+FROM node:20-alpine as build
 
 WORKDIR /ayomi-calculator
 
@@ -13,6 +13,6 @@ COPY . .
 RUN pnpm run build
 
 EXPOSE 5173
+EXPOSE 4173
 
-
-CMD [ "pnpm" , "dev"]
+CMD [ "pnpm" , "preview"]

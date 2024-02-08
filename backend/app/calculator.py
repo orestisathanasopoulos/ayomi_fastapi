@@ -21,14 +21,12 @@ def calculate(operator, operand1, operand2):
         return operand1 * operand2
     elif operator == "/":
         return operand1 / operand2
-    elif operator == "^": 
-        return operand1 ** operand2
     elif operator == "**": 
         return operand1 ** operand2       
 
 
 def postfixEval(expression):
-    operators = ["+","-","*","/","^","**"]
+    operators = ["+","-","*","/","**"]
     operandStack = Stack()
     tokenList = expression.split(" ")
     
