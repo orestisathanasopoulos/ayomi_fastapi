@@ -35,7 +35,6 @@ async def test():
 
 @app.post('/calculate',status_code=201, response_model=OperationWithResultInDb)
 def calculate(request:Operation,db: Session = Depends(get_db)):
-    print(request.operation)
     calculation = postfixEval(request.operation)
     print("RESULT",calculation)
     complete_operation:CreateOperationWithResult = {"operation":request.operation,"result":calculation}
