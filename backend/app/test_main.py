@@ -6,6 +6,7 @@ import pandas as pd
 import pytest
 from sqlalchemy import StaticPool, create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy_utils import create_database,database_exists
 from .database.models import Base
 from .main import app, get_db
 
@@ -29,8 +30,12 @@ def override_get_db():
 client = TestClient(app)
 app.dependency_overrides[get_db] = override_get_db
 
+
+
 @pytest.fixture(scope="session", autouse=True)
 def test_db():
+    if not database_exists(SQLALCHEMY_DATABASE_URL):
+         create_database(SQLALCHEMY_DATABASE_URL)
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)

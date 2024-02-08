@@ -9,12 +9,13 @@ from sqlalchemy import select,insert
 import uvicorn
 import pandas as pd
 import os  
-from backend.app.database.session import SessionLocal
-from backend.app.schemas.operations import Operation,OperationWithResultInDb,CreateOperationWithResult
-from backend.app.database.models import OperationWithResult
+from app.database.session import SessionLocal
+from app.schemas.operations import Operation,OperationWithResultInDb,CreateOperationWithResult
+from app.database.models import OperationWithResult
 
-from backend.app.calculator import postfixEval
-
+from app.calculator import postfixEval
+from dotenv import load_dotenv
+load_dotenv()
 
 app =  FastAPI()
 
@@ -70,7 +71,7 @@ def fetchOperation(
     # return results.scalars().all()
 
 
-app.mount("/", StaticFiles(directory="/Users/Orestis/repos/ayomi_fastapi/ayomi-calculator/dist",html = True), name="static")
+app.mount("/", StaticFiles(directory=os.getenv("PATH_TO_BUILD"),html = True), name="static")
 
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="0.0.0.0", port=8080, reload=True)
