@@ -21,14 +21,10 @@ COPY ./app /backend/app
 COPY ./__init__.py /backend/__init__.py
 
 # RUN python /code/app/database/db_init.py 
-
-EXPOSE 8000
+COPY --from=web /ayomi-calculator/dist /backend/dist
+EXPOSE 80
 COPY ./entrypoint.sh /code/entrypoint.sh
 RUN chmod +x /code/entrypoint.sh
 ENTRYPOINT ["/code/entrypoint.sh"]
 
 CMD ["sh"]
-
-# CMD [ "python", "/code/app/database/db_init.py" ]
-# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
-

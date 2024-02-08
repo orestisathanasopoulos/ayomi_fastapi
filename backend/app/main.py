@@ -68,8 +68,6 @@ def fetchOperation(
     headers = {'Content-Disposition': 'attachment; '}
     return path
     
-    # return results.scalars().all()
-
 
 app.mount("/", StaticFiles(directory=os.getenv("PATH_TO_BUILD"),html = True), name="static")
 

@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./ayomi-calculator  
+    ports:
+      - 5173:5173
+    develop:
+     watch:
+      - path: ./ayomi-calculator/package.json
+        action: rebuild
+      - path: ./ayomi-calculator/pnpm-lock.yaml
+        action: rebuild
+      - path: ./ayomi-calculator
+        action: sync   
+  api:
+    depends_on:
+      - db
+      - web
+    build: 
+      context: ./backend
+    ports: 
+      - 8000:8000
+    environment:  
+     - DB_HOST=host.docker.internal
+     - DB_PORT=5432
+     - DB_USER=postgres
+     - DB_PASS=postgres
+     - DB_NAME=fast_test
+     - PATH_TO_BUILD = ./ayomi-calculator/dist
+    develop:
+      watch:
+        - path: ./backend
+          target: /app
+          action: sync  
+  db:
+     image: postgres:latest
+     restart: always
+     ports:
+       - 5432:5432
+     environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fast_test
+
+  

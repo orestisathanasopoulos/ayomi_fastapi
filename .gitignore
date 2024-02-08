@@ -1,6 +1,4 @@
-alembic.ini
 .env
-
-
+.pytest_cache
 dist/
 build/

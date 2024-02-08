@@ -10,7 +10,7 @@ RUN pnpm i
 
 COPY . .
 
-RUN pnpm build
+RUN pnpm run build
 
 EXPOSE 5173
 
