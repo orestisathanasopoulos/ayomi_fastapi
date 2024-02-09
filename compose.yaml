@@ -29,7 +29,6 @@ services:
      - DB_USER=postgres
      - DB_PASS=postgres
      - DB_NAME=fast_test
-     - PATH_TO_BUILD = ./ayomi-calculator/dist
     develop:
       watch:
         - path: ./backend
