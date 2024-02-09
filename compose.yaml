@@ -1,6 +1,8 @@
 version: '3.8'
 
 services:
+  depends_on:
+      - api
   web:
     build: ./ayomi-calculator  
     ports:
