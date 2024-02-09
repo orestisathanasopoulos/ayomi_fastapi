@@ -1,14 +1,20 @@
-from datetime import date
-
-from fastapi.exceptions import RequestValidationError
-from fastapi.testclient import TestClient
-import pandas as pd
-import pytest
-from sqlalchemy import StaticPool, create_engine
+from sqlalchemy_utils import create_database, database_exists
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy_utils import create_database,database_exists
-from .database.models import Base
+from sqlalchemy import StaticPool, create_engine
+import pytest
+import pandas as pd
+from fastapi.testclient import TestClient
+from fastapi.exceptions import RequestValidationError
+from datetime import date
+import os
+import sys
+
+TEST_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_DIR = os.path.abspath(os.path.join(TEST_DIR, os.pardir))
+sys.path.insert(1, PROJECT_DIR)
+
 from .main import app, get_db
+from .database.models import Base
 
 
 SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres:postgres@localhost:5432/calc_test"
@@ -17,9 +23,11 @@ engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     poolclass=StaticPool,
 )
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+TestingSessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine)
 
 Base.metadata.create_all(bind=engine)
+
 
 def override_get_db():
     try:
@@ -27,23 +35,25 @@ def override_get_db():
         yield db
     finally:
         db.close()
+
+
 client = TestClient(app)
 app.dependency_overrides[get_db] = override_get_db
-
 
 
 @pytest.fixture(scope="session", autouse=True)
 def test_db():
     if not database_exists(SQLALCHEMY_DATABASE_URL):
-         create_database(SQLALCHEMY_DATABASE_URL)
+        create_database(SQLALCHEMY_DATABASE_URL)
     Base.metadata.create_all(bind=engine)
     yield
     Base.metadata.drop_all(bind=engine)
 
+
 def test_read_main():
     response = client.get("/test")
     assert response.status_code == 200
-    assert response.json() == {"Hi":"I'm here"}
+    assert response.json() == {"Hi": "I'm here"}
 
 
 def test_no_operations_in_db():
@@ -55,6 +65,7 @@ def test_no_operations_in_db():
     assert response.status_code == 200
     assert df.empty == True
 
+
 def test_create_operation():
     response = client.post(
         "/calculate",
@@ -64,9 +75,9 @@ def test_create_operation():
     assert response.status_code == 201
     data = response.json()
     assert data["operation"] == "32 6 +"
-    assert data["result"] == 38.0 
-    
-    
+    assert data["result"] == 38.0
+
+
 def test_one_operation_in_db():
     response = client.get('/data')
     assert response.status_code == 200
@@ -76,9 +87,9 @@ def test_one_operation_in_db():
         df = pd.DataFrame()
     assert response.status_code == 200
     assert df.empty == False
-    assert len(df)==1
-    
-    
+    assert len(df) == 1
+
+
 def test_create_operation_bad_input():
     response = client.post(
         "/calculate",
@@ -86,10 +97,7 @@ def test_create_operation_bad_input():
         json={"operation": "3fads2 6fad +"},
     )
     with pytest.raises(RequestValidationError):
-        raise RequestValidationError("Format Error - the operation must consist of numbers followed by operators")
-    assert response.status_code == 422   
-    
+        raise RequestValidationError(
+            "Format Error - the operation must consist of numbers followed by operators")
+    assert response.status_code == 422
 
-
-  
-    # assert response.json() == {[]}
