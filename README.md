@@ -14,7 +14,9 @@ From the root of the project and with Docker running:
 
 Given the simplicity of the project and for ease of use the environment variables are hardcoded in the versioned compose.yaml despite best practices.
 
-During build time the backend container uses a shell script to initialize a postgreSQL database which exists in a separate container and the frontend container bundles the latest build.
+During build time the backend container uses a shell script to initialize a postgreSQL database(on the default port 5432) which exists in a separate
+
+container and the frontend container bundles the latest build.
 
 ## Running the application
 
