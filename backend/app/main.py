@@ -33,7 +33,9 @@ app =  FastAPI(
 origins = [
     "http://localhost:4173",
     "http://localhost:8080",
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://host.docker.internal:4173",
+    "http://host.docker.internal:5173"
 ]
 
 app.add_middleware(

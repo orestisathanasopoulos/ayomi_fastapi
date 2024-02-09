@@ -19,7 +19,6 @@ services:
   api:
     depends_on:
       - db
-      - web
     build: 
       context: ./backend
     ports: 
